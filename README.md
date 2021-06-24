@@ -14,6 +14,10 @@ yarn
 quasar dev
 ```
 
+```
+node server/server.js
+```
+
 ### Lint the files
 
 ```bash
