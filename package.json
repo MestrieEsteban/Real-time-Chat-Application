@@ -1,9 +1,9 @@
 {
-  "name": "swapman",
+  "name": "Cross-x",
   "version": "0.0.1",
   "description": "A Quasar Framework app",
-  "productName": "Swap-Man, multiplayer pacman !",
-  "author": "Swap-Man",
+  "productName": "Cross-x",
+  "author": "Cross-x",
   "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.vue ./",
@@ -22,7 +22,8 @@
     "socket.io": "^4.1.2",
     "vue": "^2.6.12",
     "vue-socket.io": "^3.0.10",
-    "vue-socket.io-extended": "^4.2.0"
+    "vue-socket.io-extended": "^4.2.0",
+    "vue-webrtc": "^2.0.0"
   },
   "devDependencies": {
     "@quasar/app": "^2.0.0",

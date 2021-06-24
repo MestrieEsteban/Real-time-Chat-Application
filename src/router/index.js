@@ -1,6 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import routes from './routes'
+import WebRTC from 'vue-webrtc'
+
+Vue.use(WebRTC)
+
 
 Vue.use(VueRouter)
 /*

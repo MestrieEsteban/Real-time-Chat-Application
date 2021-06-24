@@ -1,14 +1,16 @@
 <template>
   <q-page style="min-height: 10px;">
 		<div v-if="users == '' ">
-				<div class="q-gutter-md" style="max-width: 300px">
-						<q-input v-model="username" label="User Name" />
-						<q-input v-model="room" label="Room" />
-					<q-btn @click="connexion" color="primary" label="Connexion" />
+				<div class="q-gutter-md connexion" style="max-width: 300px; display:block !important">
+						<q-input color="primary" bg-color="white" outlined v-model="username" label="User Name" />
+						<q-input color="primary" bg-color="white" outlined  v-model="room" label="Room" />
+						<center>
+							<q-btn style="" @click="connexion" color="primary" label="Connexion" />
+						</center>
 				</div>
 		</div>
 		<div v-else>
-			<div id="message" style="max-height: 500px; min-height: 500px; overflow:auto">
+			<div id="message" style="max-height: 600px; min-height: 600px; overflow:auto; background-color:#545454">
 				<ol class='chat' v-for="message in messages" :key="message.id">
 					<li :class="message.username == username ? 'self':'other'">
 						<div class="avatar"><img :src="'https://eu.ui-avatars.com/api/?name='+message.username" draggable="false"></div>
@@ -16,11 +18,29 @@
 					</li>
 				</ol>
 			</div>
-			<div class="q-pa-md q-gutter-sm" style="max-width: 500px;">
-					<q-input v-model="msg" label="Message" />
-					<q-btn round color="secondary" icon="send" @click="sendMsg" />
+			<div class="q-pa-md q-gutter-sm" style="">
+				<q-input v-model="msg" bottom-slots label="Message">
+        <template v-slot:before>
+          <q-avatar>
+            <img :src="'https://eu.ui-avatars.com/api/?name='+username">
+          </q-avatar>
+        </template>
+
+        <template v-slot:after>
+          <q-btn round dense flat icon="send" @click="sendMsg" />
+        </template>
+      	</q-input>
+			</div>
+			<div class="q-pa-md q-gutter-sm">
+				<q-btn v-if="!isCall" @click="onJoin" push color="primary" label="Join call" icon-right="call"/>
+				<q-btn v-if="isCall" @click="onLeave" color="red" label="Leave" icon-right="call_end"/>
+				<q-btn v-if="isCall" @click="onShareScreen" push color="green" label="Share Screen" icon-right="desktop_windows"/>
 			</div>
 		</div>
+		<vue-webrtc width="100%" :roomId="room" ref="webrtc">
+		</vue-webrtc>
+		<img :src="img" class="img-responsive" />
+
 		
   </q-page>
 </template>
@@ -37,7 +57,9 @@ export default {
 			room:"",
 			users:'',
 			msg:'',
-			messages:[]
+			messages:[],
+			img:'',
+			isCall: true,
     }
   },
   mounted() {
@@ -54,6 +76,7 @@ export default {
 	  connexion(){
 			if(this.username != "" && this.room != ""){
 				this.socket.emit('connexion', this.username, this.room)
+				this.onJoin()
 			}else{
 				alert("Please enter Username and Room")
 			}
@@ -69,11 +92,28 @@ export default {
       alert('Lobby disconected')
       location.reload()
     },
+		onJoin() {
+        this.$refs.webrtc.join();
+				this.isCall = true
+      },
+      onLeave() {
+				this.$refs.webrtc.leave();
+				this.isCall = false
+      },
+      onShareScreen() {
+        this.img = this.$refs.webrtc.shareScreen();
+      },
   },
 }
 </script>
 
 <style>
+
+.connexion{
+	margin: auto;
+	background-color: #343434;
+	padding: 25px;;
+}
 
 .chat {
     margin-top: 60px;
